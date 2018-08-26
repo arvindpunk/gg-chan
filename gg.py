@@ -104,7 +104,7 @@ async def handle(ctx, name: str):
 	name = name.lower()		
 	for m in server.members:
 		if name in m.name.lower():
-			user = db.searchUsers(m.id)
+			user = db.searchUsers(str(m.id))
 			if user != None:
 				break
 	if user == None:
