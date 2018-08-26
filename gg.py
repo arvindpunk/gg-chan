@@ -50,7 +50,8 @@ async def on_ready():
 	server = bot.guilds[0]
 	print('Logged in as')
 	print(bot.user.name)
-	await db.transferDB()
+	# await db.transferDB()
+	db.printdb()
 	print('------')
 
 @bot.event
@@ -59,6 +60,10 @@ async def on_member_remove(member):
 	if user != None:
 		db.remUser(user)
 
+@bot.command()
+@commands.has_role('moderators')
+async def printdatabase(ctx):
+	db.printdb()
 
 @bot.command()
 @commands.has_role('moderators')
