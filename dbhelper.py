@@ -48,7 +48,7 @@ async def transferDB():
 
 	conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 	c = conn.cursor()
-	c.execute("DROP TABLE users")
+	# c.execute("DROP TABLE users")
 	c.execute("CREATE TABLE users (uid text PRIMARY KEY, handle text, rating bigint)")
 
 	csq3.execute("SELECT * FROM users")
@@ -56,7 +56,7 @@ async def transferDB():
 		c.execute("INSERT INTO users VALUES (%s, %s, %s)", (row[0], row[1], row[2]))
 	conn.commit()
 	conn.close()
-	c.cose()
+	c.close()
 
 def searchUsers(uid):
 	conn = psycopg2.connect(DATABASE_URL, sslmode='require')
