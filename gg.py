@@ -4,6 +4,7 @@ from discord.ext import commands
 from time import sleep
 import dbhelper as db
 import misc
+import random
 
 TOKEN='NDc1NTUyNzg5NTIzNTk1Mjkx.DkigGA.5Drbh4ko-qhFwqYCkXcoZcdgfsk'
 bot = commands.Bot(command_prefix='!gg ', description='A bot that stores/retrieves codechef handles.')
@@ -47,7 +48,6 @@ async def changeRole(user):
 async def on_ready():
 	print('Logged in as')
 	print(bot.user.name)
-	print(bot.user.id)
 	print('------')
 	global server
 	server = bot.guilds[0]
@@ -112,20 +112,18 @@ async def handle(ctx, name):
 
 @bot.command()
 @commands.has_role('moderators')
-async def getid(ctx, name):
-	member = None
-	for m in server.members:
-		if name.lower() in m.name.lower():
-			member = m
+async def removeuser(ctx, uid):
+	member = searchUsers(uid)
 	if member == None:
-		await ctx.send("Username not found.")
+		await ctx.send("User not found.")
 	else:
-		await ctx.send(member.name + ' - ' + str(member.id))
+		await ctx.send(user.handle + ' has been removed from the database.')
 
 @bot.command()
 @commands.has_role('moderators')
 async def exit(ctx):
-	await ctx.send("I'm ending my life...")
+	quitMessage = [ "I'm ending my life...", "I don't feel so good...", "Alright boys, fun's over.", "Mark my words... I will come back." ]
+	await ctx.send(random.choice(quitMessage))
 	await bot.close()
 	exit(0)
 

@@ -33,7 +33,7 @@ async def updateUsers():
 		rating = await misc.getRating(row[1])
 		print(row[1] + ' - ' + str(row[2]) + ' | ' + str(rating))
 		c1.execute("UPDATE users SET rating = ? WHERE uid = ?", (rating, row[0]))
-		users.append(User(row[0], row[1], row[2]))
+		users.append(User(row[0], row[1], rating))
 	conn.commit()
 	conn.close()
 	return users
