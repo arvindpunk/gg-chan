@@ -1,5 +1,8 @@
-import sqlite3
+import os
+import psycopg2
 import misc
+
+DATABASE_URL = os.environ['DATABASE_URL']
 
 class User:
 	def __init__(self, uid, handle, rating):
@@ -8,14 +11,14 @@ class User:
 		self.rating = rating
 
 def addUser(user):
-	conn = sqlite3.connect('userdata.db')
+	conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 	c = conn.cursor()
 	c.execute("INSERT INTO users VALUES (?, ?, ?)", (user.uid, user.handle, user.rating))
 	conn.commit()
 	conn.close()
 
 def remUser(user):
-	conn = sqlite3.connect('userdata.db')
+	conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 	c = conn.cursor()
 	c.execute("DELETE FROM users WHERE uid = ?", (user.uid,))
 	print("User removed: " + user.uid + " " + user.handle)
@@ -23,7 +26,7 @@ def remUser(user):
 	conn.close()
 
 async def updateUsers():
-	conn = sqlite3.connect('userdata.db')
+	conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 	c = conn.cursor()
 	c1 = conn.cursor()
 	c.execute("SELECT * FROM users")
@@ -38,8 +41,24 @@ async def updateUsers():
 	conn.close()
 	return users
 
+async def transferDB():
+	connsq3 = sqlite3.connect('userdata.db')
+	csq3 = connsq3.cursor()
+
+	conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+	c = conn.cursor()
+
+	c.execute("CREATE TABLE users (uid text PRIMARY KEY, handle text, rating bigint)")
+
+	csq3.execute("SELECT * FROM users")
+	for row in csq3:
+		c.execute("INSERT INTO users VALUES (?, ?, ?)", (row[0], row[1], row[2]))
+	conn.commit()
+	conn.close()
+	c.cose()
+
 def searchUsers(uid):
-	conn = sqlite3.connect('userdata.db')
+	conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 	c = conn.cursor()
 	c.execute("SELECT * FROM users WHERE uid = ?", (uid,))
 	row = c.fetchone()
@@ -51,14 +70,14 @@ def searchUsers(uid):
 	return u
 
 def printdb():
-	conn = sqlite3.connect('userdata.db')
+	conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 	c = conn.cursor()
 	c.execute("SELECT * FROM users")
 	print(c.fetchall())
 	conn.close()
 
 def dbsize():
-	conn = sqlite3.connect('userdata.db')
+	conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 	c = conn.cursor()
 	c.execute("SELECT COUNT(*) FROM users")
 	count = c.fetchone()
