@@ -75,13 +75,19 @@ async def removeuser(ctx, discordid: str):
 
 @bot.command()
 @commands.has_role('moderators')
-async def updateroles(ctx):
+async def updateroles(ctx, userid=None):
 	await ctx.send("Alright, don't cry when you go down.")
-	users = await db.updateUsers()
-	for user in users:
-		print(user.handle + ' - ' + str(user.rating))
-		await changeRole(user)
-	await ctx.send("Ratings have been updated, gg.")
+	if userid != None:
+		user = db.searchUsers(str(userid))
+		if user != None:
+			newRating = await db.updateSpecificUser(user)
+			await ctx.send("Rating has been updated for " + user.handle + ". [New rating: " + newRating +"]")
+	else:
+		users = await db.updateUsers()
+		for user in users:
+			print(user.handle + ' - ' + str(user.rating))
+			await changeRole(user)
+		await ctx.send("Ratings have been updated, gg.")
 
 @bot.command()
 async def sethandle(ctx, h: str):

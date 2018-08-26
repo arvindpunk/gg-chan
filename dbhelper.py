@@ -43,6 +43,19 @@ async def updateUsers():
 	conn.close()
 	return users
 
+async def updateSpecificUser(user):
+	conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+	c = conn.cursor()
+	c1 = conn.cursor()
+	c.execute("SELECT * FROM users WHERE uid = %s", (user.uid,))	
+	rating = await misc.getRating(row[1])
+	rating = str(rating)
+	print(row[1] + ' - ' + row[2] + ' | ' + str(rating))
+	c1.execute("UPDATE users SET rating = %s WHERE uid = %s", (rating, row[0]))
+	conn.commit()
+	conn.close()
+	return rating
+
 async def transferDB():
 	connsq3 = sqlite3.connect('userdata.db')
 	csq3 = connsq3.cursor()
