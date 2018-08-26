@@ -14,14 +14,14 @@ class User:
 def addUser(user):
 	conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 	c = conn.cursor()
-	c.execute("INSERT INTO users VALUES (?, ?, ?)", (user.uid, user.handle, user.rating))
+	c.execute("INSERT INTO users VALUES (%s, %s, %s)", (user.uid, user.handle, user.rating))
 	conn.commit()
 	conn.close()
 
 def remUser(user):
 	conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 	c = conn.cursor()
-	c.execute("DELETE FROM users WHERE uid = ?", (user.uid,))
+	c.execute("DELETE FROM users WHERE uid = %s", (user.uid,))
 	print("User removed: " + user.uid + " " + user.handle)
 	conn.commit()
 	conn.close()
@@ -36,7 +36,7 @@ async def updateUsers():
 		# print(row)
 		rating = await misc.getRating(row[1])
 		print(row[1] + ' - ' + str(row[2]) + ' | ' + str(rating))
-		c1.execute("UPDATE users SET rating = ? WHERE uid = ?", (rating, row[0]))
+		c1.execute("UPDATE users SET rating = %s WHERE uid = %s", (rating, row[0]))
 		users.append(User(row[0], row[1], rating))
 	conn.commit()
 	conn.close()
@@ -48,12 +48,12 @@ async def transferDB():
 
 	conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 	c = conn.cursor()
-
+	c.execute("DROP TABLE users")
 	c.execute("CREATE TABLE users (uid text PRIMARY KEY, handle text, rating bigint)")
 
 	csq3.execute("SELECT * FROM users")
 	for row in csq3:
-		c.execute("INSERT INTO users VALUES (?, ?, ?)", (row[0], row[1], row[2]))
+		c.execute("INSERT INTO users VALUES (%s, %s, %s)", (row[0], row[1], row[2]))
 	conn.commit()
 	conn.close()
 	c.cose()
@@ -61,7 +61,7 @@ async def transferDB():
 def searchUsers(uid):
 	conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 	c = conn.cursor()
-	c.execute("SELECT * FROM users WHERE uid = ?", (uid,))
+	c.execute("SELECT * FROM users WHERE uid = %s", (uid,))
 	row = c.fetchone()
 	if row == None:
 		u = None
