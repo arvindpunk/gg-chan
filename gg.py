@@ -48,6 +48,7 @@ async def changeRole(user):
 async def on_ready():
 	print('Logged in as')
 	print(bot.user.name)
+	await db.transferDB()
 	print('------')
 	global server
 	server = bot.guilds[0]
