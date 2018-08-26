@@ -64,6 +64,7 @@ async def on_member_remove(member):
 async def removeuser(ctx, discordid):
 	user = db.searchUsers(discordid)
 	if user != None:
+		await ctx.send(user.handle + ' has been pruned from the database!')
 		db.remUser(user)
 
 @bot.command()
@@ -109,15 +110,6 @@ async def handle(ctx, name):
 		await ctx.send("Username not found.")
 	else:
 		await ctx.send(user.handle + ' has a rating of ' + str(user.rating) + '.\nhttps://www.codechef.com/users/' + user.handle)
-
-@bot.command()
-@commands.has_role('moderators')
-async def removeuser(ctx, uid):
-	member = searchUsers(uid)
-	if member == None:
-		await ctx.send("User not found.")
-	else:
-		await ctx.send(user.handle + ' has been removed from the database.')
 
 @bot.command()
 @commands.has_role('moderators')
