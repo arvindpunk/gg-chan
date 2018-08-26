@@ -81,6 +81,8 @@ async def updateroles(ctx, userid=None):
 		user = db.searchUsers(str(userid))
 		if user != None:
 			newRating = await db.updateSpecificUser(user)
+			user.rating = newRating
+			await changeRole(user)
 			await ctx.send("Rating has been updated for " + user.handle + ". [New rating: " + newRating +"]")
 	else:
 		users = await db.updateUsers()
