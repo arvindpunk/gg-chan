@@ -39,5 +39,5 @@ async def getSubmissions(handle=''):
 	for row in data:
 		strRow = str(row)
 		if handle in strRow:
-			l.append(strRow[83:91])
+			l.append(int(strRow[83:91]))
 	return l

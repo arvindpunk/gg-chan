@@ -35,7 +35,8 @@ async def updateUsers():
 	for row in c:
 		# print(row)
 		rating = await misc.getRating(row[1])
-		print(row[1] + ' - ' + str(row[2]) + ' | ' + str(rating))
+		rating = str(rating)
+		print(row[1] + ' - ' + row[2] + ' | ' + str(rating))
 		c1.execute("UPDATE users SET rating = %s WHERE uid = %s", (rating, row[0]))
 		users.append(User(row[0], row[1], rating))
 	conn.commit()
@@ -48,12 +49,12 @@ async def transferDB():
 
 	conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 	c = conn.cursor()
-	# c.execute("DROP TABLE users")
-	c.execute("CREATE TABLE users (uid text PRIMARY KEY, handle text, rating bigint)")
+	c.execute("DROP TABLE users")
+	c.execute("CREATE TABLE users (uid text PRIMARY KEY, handle text, rating text)")
 
 	csq3.execute("SELECT * FROM users")
 	for row in csq3:
-		c.execute("INSERT INTO users VALUES (%s, %s, %s)", (row[0], row[1], row[2]))
+		c.execute("INSERT INTO users VALUES (%s, %s, %s)", (str(row[0]), str(row[1]), str(row[2])))
 	conn.commit()
 	conn.close()
 	c.close()
@@ -69,18 +70,3 @@ def searchUsers(uid):
 		u = User(row[0], row[1], row[2])
 	conn.close()
 	return u
-
-def printdb():
-	conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-	c = conn.cursor()
-	c.execute("SELECT * FROM users")
-	print(c.fetchall())
-	conn.close()
-
-def dbsize():
-	conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-	c = conn.cursor()
-	c.execute("SELECT COUNT(*) FROM users")
-	count = c.fetchone()
-	conn.close()
-	return count

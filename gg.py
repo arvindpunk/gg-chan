@@ -62,11 +62,11 @@ async def on_member_remove(member):
 
 @bot.command()
 @commands.has_role('moderators')
-async def removeuser(ctx, discordid):
+async def removeuser(ctx, discordid: str):
 	user = db.searchUsers(discordid)
 	if user != None:
-		await ctx.send(user.handle + ' has been pruned from the database!')
 		db.remUser(user)
+		await ctx.send(user.handle + ' has been pruned from the database!')
 
 @bot.command()
 @commands.has_role('moderators')
@@ -79,14 +79,14 @@ async def updateroles(ctx):
 	await ctx.send("Ratings have been updated, gg.")
 
 @bot.command()
-async def sethandle(ctx, h):
+async def sethandle(ctx, h: str):
 	rating = await misc.getRating(h)
 	if rating == -1:
 		await ctx.send("Handle does not exist.")
 	elif h in currentHandles:
 		await ctx.send("Someone else is trying to set " + h + " as their handle. Please wait.")
 	else:
-		user = db.searchUsers(ctx.message.author.id)
+		user = db.searchUsers(str(ctx.message.author.id))
 		if user != None:
 			await ctx.send("This handle already exists in the database.")
 		else:
@@ -94,12 +94,12 @@ async def sethandle(ctx, h):
 			await ctx.send("You have 1 minute to submit a solution (doesn't have to be correct) for https://www.codechef.com/problems/FLOW006")
 			l = await misc.getSubmissions()
 			lastSubmitTime = l[0]
-			user = User(str(ctx.message.author.id), h, rating)
+			user = User(str(ctx.message.author.id), h, str(rating))
 			await verifyUser(ctx, user, lastSubmitTime)
 
 
 @bot.command()
-async def handle(ctx, name):
+async def handle(ctx, name: str):
 	user = None
 	name = name.lower()		
 	for m in server.members:
@@ -108,14 +108,14 @@ async def handle(ctx, name):
 			if user != None:
 				break
 	if user == None:
-		await ctx.send("Username not found.")
+		await ctx.send("User not found in the database.")
 	else:
-		await ctx.send(user.handle + ' has a rating of ' + str(user.rating) + '.\nhttps://www.codechef.com/users/' + user.handle)
+		await ctx.send(user.handle + ' has a rating of ' + user.rating + '.\nhttps://www.codechef.com/users/' + user.handle)
 
 @bot.command()
 @commands.has_role('moderators')
 async def exit(ctx):
-	quitMessage = [ "I'm ending my life...", "I don't feel so good...", "Alright boys, fun's over.", "Mark my words... I will come back." ]
+	quitMessage = [ "[Error 69] _commits SUDOKU_", "I'm ending my life...", "I don't feel so good...", "Alright boys, fun's over.", "Mark my words... I will come back." ]
 	await ctx.send(random.choice(quitMessage))
 	await bot.close()
 	exit(0)
