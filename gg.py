@@ -46,12 +46,12 @@ async def changeRole(user):
 
 @bot.event
 async def on_ready():
+	global server
+	server = bot.guilds[0]
 	print('Logged in as')
 	print(bot.user.name)
 	await db.transferDB()
 	print('------')
-	global server
-	server = bot.guilds[0]
 
 @bot.event
 async def on_member_remove(member):
