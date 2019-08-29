@@ -21,8 +21,8 @@ async def verifyUser(ctx, user, time):
 	await asyncio.sleep(60.0)
 	submissions = await misc.getSubmissions(user.handle)
 	if len(submissions) == 0:
-		print('Cannot verify user', user.handle)
-		await ctx.send('Cannot verify user '+ user.handle + '.')
+		await ctx.send('Codechef servers are slow. Try again.')
+		print("Length 0 in verifyUser()")
 	elif submissions[0] <= time:
 		print('Cannot verify user', user.handle)
 		await ctx.send('Cannot verify user '+ user.handle + '.')
