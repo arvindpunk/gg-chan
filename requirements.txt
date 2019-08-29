@@ -1,4 +1,4 @@
 git+https://github.com/Rapptz/discord.py@rewrite#egg=discord.py
-requests==2.19.1
+requests>=2.20.0
 beautifulsoup4==4.6.1
 psycopg2==2.7.5
