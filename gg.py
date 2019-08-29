@@ -105,11 +105,14 @@ async def sethandle(ctx, h: str):
 			await ctx.send("This handle already exists in the database.")
 		else:
 			currentHandles.append(h)
-			await ctx.send("You have 1 minute to submit a solution (doesn't have to be correct) for https://www.codechef.com/problems/FLOW006")
 			l = await misc.getSubmissions()
-			lastSubmitTime = l[0]
-			user = User(str(ctx.message.author.id), h, str(rating))
-			await verifyUser(ctx, user, lastSubmitTime)
+			if (len(l) == 0):
+				await ctx.send("Codechef servers are slow. Try again.")
+			else:
+				lastSubmitTime = l[0]
+				await ctx.send("You have 1 minute to submit a solution (doesn't have to be correct) for https://www.codechef.com/problems/FLOW006")
+				user = User(str(ctx.message.author.id), h, str(rating))
+				await verifyUser(ctx, user, lastSubmitTime)
 
 
 @bot.command()
