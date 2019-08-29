@@ -5,8 +5,9 @@ from time import sleep
 import dbhelper as db
 import misc
 import random
+import os
 
-TOKEN='NDc1NTUyNzg5NTIzNTk1Mjkx.DkigGA.5Drbh4ko-qhFwqYCkXcoZcdgfsk'
+TOKEN = os.environ['TOKEN']
 bot = commands.Bot(command_prefix='!gg ', description='A bot that stores/retrieves codechef handles.')
 currentHandles = []
 
